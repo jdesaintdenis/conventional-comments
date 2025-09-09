@@ -117,7 +117,11 @@ function createSlackRedirectButton(url) {
         button.rel = 'noopener noreferrer';
     } else {
         button = document.createElement('button');
-        button.addEventListener('click', () => {
+        button.addEventListener('click', (event) => {
+            // Stop propagation to avoid triggering underlying components
+            event.stopPropagation();
+            event.preventDefault();
+
             // Get organization name from URL for query parameter
             const orgSlug = window.location.pathname.split('/')[1]; // GitHub org slug from URL
             
