@@ -71,6 +71,12 @@ function initializeSlackLinkForThread(threadElement) {
         threadElement.classList.contains(SLACK_LINK_MARKER_CLASS)
     ) return;
 
+    // Skip new comment creation boxes - they should not have Slack buttons
+    if (threadElement.hasAttribute('data-marker-navigation-new-thread') || 
+        threadElement.getAttribute('data-marker-id') === 'new-comment') {
+        return;
+    }
+
     threadElement.classList.add(SLACK_LINK_MARKER_CLASS);
 
     (async () => {
