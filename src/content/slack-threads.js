@@ -71,6 +71,20 @@ function initializeSlackLinkForThread(threadElement) {
         threadElement.classList.contains(SLACK_LINK_MARKER_CLASS)
     ) return;
 
+    // Skip new comment creation boxes - they should not have Slack buttons
+    if (threadElement.hasAttribute('data-marker-navigation-new-thread') || 
+        threadElement.getAttribute('data-marker-id') === 'new-comment') {
+        return;
+    }
+
+    // Skip collapsed comments - they should not have Slack buttons (new GitHub experience only)
+    // Look for chevron-right icon (collapsed state)
+    const hasChevronRight = threadElement.querySelector('.octicon-chevron-right');
+    if (hasChevronRight) {
+        return;
+    }
+    
+
     threadElement.classList.add(SLACK_LINK_MARKER_CLASS);
 
     (async () => {

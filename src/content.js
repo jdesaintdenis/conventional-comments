@@ -63,11 +63,12 @@ function main() {
                 }
             }
         }
-    }, 1000);
+    }, 500);
 
     // Mutation observer
     const observer = new MutationObserver((mutationsList) => {
         if (isProcessing) return;
+        
         isProcessing = true;
 
         setTimeout(() => {

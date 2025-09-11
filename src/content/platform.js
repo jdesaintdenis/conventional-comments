@@ -25,9 +25,14 @@ const GITHUB_CONFIG_OLD = {
 const GITHUB_CONFIG_NEW = {
 	...GITHUB_CONFIG,
 	targetTextareaSelectors: [
-		'textarea.prc-Textarea-TextArea-13q4j',
-		'textarea[aria-label="Markdown value"]',
-		'textarea[aria-describedby$="-description"]',
+		// First inline editor (new thread) — appears before any comment exists
+		'div[data-marker-navigation-new-thread="true"] textarea[aria-label="Markdown value"]:not([data-cc-init])',
+
+		// Any inline thread editor (subsequent comments / replies)
+		'div[data-marker-id] textarea[aria-label="Markdown value"]:not([data-cc-init])',
+
+		// Fallback inside the markdown editor fieldset (covers odd cases and PR header comment box)
+		'fieldset textarea[aria-label="Markdown value"]:not([data-cc-init])',
 	],
 	targetThreadSelectors: [
 		'div.js-inline-comments-container',
@@ -107,6 +112,8 @@ const githubOldStrategy = {
 		}
 	},
 	insertThreadSlackRedirectButton(threadElement, slackButton) {
+	
+		// Original logic for non-resolved comments
 		let actionsContainer = threadElement.children[threadElement.children.length - 1];
 		if (!actionsContainer) return false;
 
@@ -116,7 +123,9 @@ const githubOldStrategy = {
 			actionsContainer.className = 'd-flex flex-justify-end p-2';
 			threadElement.appendChild(actionsContainer);
 		} else {
+			actionsContainer.classList.add('d-flex');         
 			actionsContainer.classList.add('flex-items-center');
+			actionsContainer.classList.add('flex-justify-between');
 			actionsContainer.classList.add('pr-3');
 		}
 
@@ -193,8 +202,24 @@ const gitlabStrategy = {
 // --- Platform object to automatically select proper strategy ---
 
 function detectGithubExperience() {
-	if (document.querySelector('div[data-testid="review-thread"]')) return 'new';
-	return 'old';
+  // Prefer the new experience whenever we see any of the new editor/thread markers.
+  // This catches the very first inline editor (new-thread box) which appears before a review-thread exists.
+  const newMarkers = document.querySelector(
+    [
+      // Any review thread (present once there are comments)
+      'div[data-testid="review-thread"]',
+      // Inline thread container used in the new UI
+      'div[data-marker-id]',
+      // The first inline editor container when starting a brand new thread
+      'div[data-marker-navigation-new-thread="true"]',
+      // New markdown editor module containers show up even before a comment exists
+      '[class^="MarkdownEditor-module__container"]',
+      // Textareas used by the new markdown editor (appears on PR pages and inline editors)
+      'textarea[aria-label="Markdown value"]',
+    ].join(', ')
+  );
+
+  return newMarkers ? 'new' : 'old';
 }
 
 export const Platform = (function() {
@@ -271,5 +296,3 @@ export const Platform = (function() {
 })();
 
 export default Platform;
-
-
