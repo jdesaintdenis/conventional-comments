@@ -77,6 +77,14 @@ function initializeSlackLinkForThread(threadElement) {
         return;
     }
 
+    // Skip collapsed comments - they should not have Slack buttons (new GitHub experience only)
+    // Look for chevron-right icon (collapsed state)
+    const hasChevronRight = threadElement.querySelector('.octicon-chevron-right');
+    if (hasChevronRight) {
+        return;
+    }
+    
+
     threadElement.classList.add(SLACK_LINK_MARKER_CLASS);
 
     (async () => {
