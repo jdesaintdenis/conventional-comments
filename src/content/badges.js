@@ -326,10 +326,19 @@ function initializeToolbarForTextarea(textarea) {
 
   renderToolbar(toolbar, textarea);
 
-  if (textarea.classList.contains("prc-Textarea-TextArea-13q4j")) {
-    const wrapper = textarea.closest("span");
-    if (wrapper && wrapper.parentNode) {
-      wrapper.parentNode.insertBefore(toolbar, wrapper);
+  const hasGithubMarkdownClass = Array.from(textarea.classList).some((name) =>
+    name.startsWith("prc-Textarea-TextArea-")
+  );
+  const githubWrapper = textarea.closest(
+    '[class*="MarkdownInput-module__textArea"], [class*="TextInputBaseWrapper"]'
+  );
+
+  if (hasGithubMarkdownClass || githubWrapper) {
+    // GitHub's new editor wraps the textarea in a flex container; insert above it.
+    if (githubWrapper && githubWrapper.parentNode) {
+      githubWrapper.parentNode.insertBefore(toolbar, githubWrapper);
+    } else {
+      textarea.parentNode?.insertBefore(toolbar, textarea);
     }
   } else {
     textarea.parentNode?.insertBefore(toolbar, textarea);
