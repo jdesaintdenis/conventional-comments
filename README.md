@@ -1,4 +1,4 @@
-# Conventional Comments - by Pullpo
+# Conventional Comments (Security-Focused Fork)
 
 <p align="center">
   <img src="icons/icon128.png" alt="Conventional Comments Logo" width="128" height="128">
@@ -12,51 +12,37 @@
 
 ## 🎯 The Problem
 
-Code reviews are crucial for maintaining code quality, but they often suffer from:
-- Ambiguous or unclear feedback
-- Misunderstandings about comment severity
-- Difficulty in parsing and tracking different types of feedback
-- Inconsistent commenting styles across team members
+Pullco created an awesome browser extension, but some companies policies might not allow for it to be used.
+
+This Fork aims to fix that.
 
 ## 💡 The Solution
 
-*Conventional Comments - by Pullpo* brings the power of [Conventional Comments](https://conventionalcomments.org/) directly into your GitHub and GitLab workflow. It adds a sleek, intuitive toolbar to every comment box, making it easy to:
+This fork is a more secure way of using the awesome feature that Pullco designed with their Conventional Comments implementation for GitHub and GitLab.
 
-- Add standardized labels to your comments (praise, suggestion, issue, etc.)
-- Include decorators for additional context (non-blocking, blocking, if-minor)
-- Maintain consistent formatting across all review comments
-- Toggle between plain text and badge-style formatting
+Simply fork it again into your organization's repositories, change the `homepage_url` inside `manifest-base.json` to your new repo, and you're good to go!
 
 ## ✨ Features
 
-- 🎨 **Intuitive Toolbar**: Seamlessly integrated into GitHub and GitLab interfaces
-- 🏷️ **Standard Labels**: 
-  - `praise`: Highlight something positive
-  - `nitpick`: Minor, non-blocking issues
-  - `suggestion`: Suggest specific improvements
-  - `issue`: Point out blocking problems
-  - `question`: Ask for clarification
-  - `thought`: Share a reflection or idea
-  - `chore`: Request minor, non-code tasks
-- 🎯 **Decorations**:
-  - `(non-blocking)`: Optional changes
-  - `(blocking)`: Must be addressed
-  - `(if-minor)`: Address if the effort is small
-- 🔄 **Toggle Functionality**: Easily remove labels or decorations
-- 🎨 **Badge Style Option**: Switch between text and visual badge formats
-- 🌓 **Dark Mode Support**: Seamlessly works with both GitHub and GitLab themes
-
-## 📥 Installation
-
-### Chrome
-1. Visit the [Chrome Web Store](https://chromewebstore.google.com/detail/gelgbjildgbbfgfgpibgcnolcipinmlp?utm_source=github_readme)
-2. Click "Add to Chrome"
-3. The extension will automatically activate on GitHub.com and GitLab.com
-
-### Firefox
-1. Visit the [Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/conventional-comments-pullpo/)
-2. Click "Add to Firefox"
-3. The extension will automatically activate on GitHub.com and GitLab.com
+- 🔐 **No external API calls** - All assets moved inside the repo and all external API calls were removed
+- 💯 **All original features available** - Or almost all of them
+  - 🎨 **Intuitive Toolbar**: Seamlessly integrated into GitHub and GitLab interfaces
+  - 🏷️ **Standard Labels**: 
+    - `praise`: Highlight something positive
+    - `nitpick`: Minor, non-blocking issues
+    - `suggestion`: Suggest specific improvements
+    - `issue`: Point out blocking problems
+    - `question`: Ask for clarification
+    - `thought`: Share a reflection or idea
+    - `chore`: Request minor, non-code tasks
+  - 🎯 **Decorations**:
+    - `(non-blocking)`: Optional changes
+    - `(blocking)`: Must be addressed
+    - `(if-minor)`: Address if the effort is small
+  - 🔄 **Toggle Functionality**: Easily remove labels or decorations
+  - 🎨 **Badge Style Option**: Switch between text and visual badge formats
+  - 🌓 **Dark Mode Support**: Seamlessly works with both GitHub and GitLab themes
+  - 🧩 ~~**Slack Threads**: Integrated with Pullpo's PR-Channels add-on for direct Slack thread links~~ **Removed for security reasons**
 
 ## 🚀 Usage
 
@@ -82,14 +68,16 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 The extension can be built for both Chrome and Firefox using our build system:
 
-1. Clone the repository and install dependencies:
+1. Fork this repository inside your own organization
+2. Update `homepage_url` in `manifest-base.json` to point to your fork -> _this is required to prevent the use of assets outside your organization_
+3. Clone your fork and install dependencies:
    ```bash
-   git clone https://github.com/pullpo/conventional-comments-helper.git
-   cd conventional-comments-helper
+   git clone https://github.com/<your-user-or-org>/conventional-comments.git
+   cd conventional-comments
    npm install
    ```
 
-2. Build for your target browser:
+4. Build for your target browser:
    - For Chrome:
      ```bash
      npm run build:chrome
@@ -106,7 +94,7 @@ The extension can be built for both Chrome and Firefox using our build system:
       > [!NOTE]
       > Append ` -- prod` to a build command to generate a minified bundle.
 
-3. Load the extension:
+5. Load the extension:
    - Chrome: Load the `build/chrome` directory as an unpacked extension
    - Firefox: Load the `build/firefox` directory as a temporary add-on
 
@@ -116,5 +104,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Inspired by [conventionalcomments.org](https://conventionalcomments.org/)
-- Built with love for the open source community
+- Original project: https://github.com/pullpo-io/conventional-comments
