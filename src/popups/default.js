@@ -1,6 +1,5 @@
 // Attach listeners to settings checkboxes
 function attachListeners(root) {
-
   // Prettify option
   const prettifyToggle = root.querySelector("#prettify");
 
@@ -12,20 +11,6 @@ function attachListeners(root) {
     prettifyToggle.addEventListener("change", () => {
       const isEnabled = prettifyToggle.checked;
       chrome.storage.local.set({ prettify: isEnabled });
-    });
-  }
-
-  // Slack threads option
-  const slackThreadsToggle = root.querySelector("#slack-threads");
-
-  if (slackThreadsToggle) {
-    chrome.storage.local.get(["slack"], (result) => {
-      slackThreadsToggle.checked = result.slack ?? true; // Default to true
-    });
-
-    slackThreadsToggle.addEventListener("change", () => {
-      const isEnabled = slackThreadsToggle.checked;
-      chrome.storage.local.set({ slack: isEnabled });
     });
   }
 }

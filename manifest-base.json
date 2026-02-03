@@ -3,6 +3,7 @@
   "name": "Conventional Comments (GitHub) - by Pullpo",
   "version": "0.2.6",
   "description": "Helps format code review comments on GitHub using the Conventional Comments standard.",
+  "homepage_url": "https://github.com/jdesaintdenis/conventional-comments",
   "action": {
     "default_popup": "popups/default.html",
     "default_icon": {
@@ -15,7 +16,6 @@
     "storage"
   ],
   "host_permissions": [
-    "https://api.pullpo.io/*",
     "*://github.com/*",
     "*://gitlab.com/*"
   ],

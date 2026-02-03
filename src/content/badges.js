@@ -48,7 +48,7 @@ export const DECORATIONS = [
 export const PLAIN_CC_REGEX =
   /^\s*(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)\s*(?:\((non-blocking|blocking|if-minor)\))?:)\s*/;
 export const BADGE_CC_REGEX =
-  /^\s*\[\!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\(https?:\/\/img\.shields\.io\/badge\/.*?\)\]\(https?:\/\/pullpo\.io\/cc\?.*?\)\s*/;
+  /^\s*!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\((?:https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/refs\/heads\/[^/]+\/assets|assets)\/badges\/[^/]+\/[^)]+\.svg\)\s*/;
 
 // --- Toolbar selector Constants ---
 
@@ -62,47 +62,76 @@ let settingsCounter = 0;
 
 // --- Badge Helpers ---
 
-function getBadgeColor(type) {
-  const label = LABELS.find((l) => l.label === type);
-  return label ? label.color.substring(1) : "6B7280";
+function parseGithubRepoFromUrl(url) {
+  if (!url) {
+    return null;
+  }
+
+  let parsed;
+  try {
+    parsed = new URL(url);
+  } catch {
+    return null;
+  }
+
+  if (parsed.hostname !== "github.com") {
+    return null;
+  }
+
+  const parts = parsed.pathname.split("/").filter(Boolean);
+  if (parts.length < 2) {
+    return null;
+  }
+
+  let branch = null;
+  if (parts.length >= 4 && parts[2] === "tree") {
+    branch = parts[3];
+  }
+
+  return { owner: parts[0], repo: parts[1], branch };
+}
+
+function getGithubRepoInfo() {
+  const manifest = chrome?.runtime?.getManifest?.();
+  const manifestRepo = parseGithubRepoFromUrl(manifest?.homepage_url);
+
+  if (manifestRepo) {
+    return { ...manifestRepo, branch: manifestRepo.branch || "main" };
+  }
+
+  if (window.location.hostname !== "github.com") {
+    return null;
+  }
+
+  const parts = window.location.pathname.split("/").filter(Boolean);
+  if (parts.length < 2) {
+    return null;
+  }
+
+  const defaultBranchMeta = document.querySelector(
+    'meta[name="octolytics-dimension-repository_default_branch"]'
+  );
+  const defaultBranch =
+    defaultBranchMeta?.getAttribute("content")?.trim() || "main";
+
+  return { owner: parts[0], repo: parts[1], branch: defaultBranch };
+}
+
+function getBadgeBaseUrl() {
+  const repoInfo = getGithubRepoInfo();
+  if (repoInfo) {
+    return `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/refs/heads/${repoInfo.branch}/assets`;
+  }
+
+  return "assets";
 }
 
 function createBadgeMarkdown(type, decoration) {
-  const labelColor = getBadgeColor(type);
-  let label = type;
-  let message = decoration || "";
-  let decorationColor = "";
+  const decorationSuffix = decoration ? `-${decoration.replace(/-/g, "_")}` : "";
+  const badgeFilename = `${type}${decorationSuffix}.svg`;
+  const badgeUrl = `${getBadgeBaseUrl()}/badges/${type}/${badgeFilename}`;
 
-  if (decoration) {
-    const decorObj = DECORATIONS.find((d) => d.label === decoration);
-    if (decorObj) {
-      decorationColor = decorObj.color.substring(1);
-    }
-  }
-
-  let badgeUrl;
-  const encode = (str) =>
-    encodeURIComponent(str.replace(/-/g, "--").replace(/_/g, "__"));
-
-  if (message) {
-    if (decorationColor) {
-      badgeUrl = `https://img.shields.io/badge/${encode(label)}-${encode(
-        message
-      )}-${decorationColor}?labelColor=${labelColor}`;
-    } else {
-      badgeUrl = `https://img.shields.io/badge/${encode(label)}-${encode(
-        message
-      )}-${labelColor}`;
-    }
-  } else {
-    badgeUrl = `https://img.shields.io/badge/${encode(label)}-${labelColor}`;
-  }
-
-  const badge = `![${type}${decoration ? `(${decoration})` : ""}](${badgeUrl})`;
-  const pullpoUrl = `https://pullpo.io/cc?l=${encodeURIComponent(type)}${
-    decoration ? `&d=${encodeURIComponent(decoration)}` : ""
-  }`;
-  return `[${badge}](${pullpoUrl}) `;
+  return `![${type}${decoration ? `(${decoration})` : ""}](${badgeUrl}) `;
 }
 
 // --- LocalStorage Helpers ---

@@ -44,7 +44,6 @@ Code reviews are crucial for maintaining code quality, but they often suffer fro
   - `(if-minor)`: Address if the effort is small
 - 🔄 **Toggle Functionality**: Easily remove labels or decorations
 - 🎨 **Badge Style Option**: Switch between text and visual badge formats
-- 🧩 **Slack Threads**: Integrated with Pullpo's PR-Channels add-on for direct Slack thread links
 - 🌓 **Dark Mode Support**: Seamlessly works with both GitHub and GitLab themes
 
 ## 📥 Installation

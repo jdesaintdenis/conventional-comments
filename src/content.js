@@ -3,12 +3,6 @@ import {
   processCommentAreas,
   checkAndInitializeAddedTextareas,
 } from "./content/badges.js";
-import {
-  checkSlackStatus,
-  processThreads,
-  checkAndInitializeAddedThreads,
-  resetSlackStatus,
-} from "./content/slack-threads.js";
 
 // Enhanced initialization with multiple strategies
 let isProcessing = false;
@@ -17,14 +11,9 @@ function processUiElements() {
   Platform.recheck();
 
   processCommentAreas();
-  if (Platform.settings.get("slack", true))
-    checkSlackStatus().then(processThreads);
 }
 
 function handleUrlChange() {
-  // Reset necessary state
-  resetSlackStatus();
-
   // Process
   isProcessing = false;
   processUiElements();
@@ -65,15 +54,6 @@ function main() {
       if (textareas.length > 0) {
         processCommentAreas();
       }
-
-      if (Platform.settings.get("slack", true)) {
-        const threads = document.querySelectorAll(
-          Platform.strategy.getUnprocessedThreadQuery()
-        );
-        if (threads.length > 0) {
-          checkSlackStatus().then(processThreads);
-        }
-      }
     }
   }, 500);
 
@@ -92,8 +72,6 @@ function main() {
             for (const node of mutation.addedNodes) {
               if (node.nodeType === Node.ELEMENT_NODE) {
                 checkAndInitializeAddedTextareas(node);
-                if (Platform.settings.get("slack", true))
-                  checkAndInitializeAddedThreads(node);
               }
             }
           }
