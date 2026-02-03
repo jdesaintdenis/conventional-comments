@@ -48,7 +48,7 @@ export const DECORATIONS = [
 export const PLAIN_CC_REGEX =
   /^\s*(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)\s*(?:\((non-blocking|blocking|if-minor)\))?:)\s*/;
 export const BADGE_CC_REGEX =
-  /^\s*!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\((?:https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/refs\/heads\/[^/]+\/assets|assets)\/badges\/[^/]+\/[^)]+\.svg\)\s*/;
+  /^\s*(?:\[(?=!\[))?!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\((?:https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/refs\/heads\/[^/]+\/assets|assets)\/badges\/[^/]+\/[^)]+\.svg\)(?:\]\([^)]+\))?\s*/;
 
 // --- Toolbar selector Constants ---
 
@@ -126,12 +126,27 @@ function getBadgeBaseUrl() {
   return "assets";
 }
 
+function getBadgeDocsBaseUrl() {
+  const repoInfo = getGithubRepoInfo();
+  if (repoInfo) {
+    return `https://github.com/${repoInfo.owner}/${repoInfo.repo}/blob/${repoInfo.branch}/assets/badges/docs`;
+  }
+
+  return "assets/badges/docs";
+}
+
+function getBadgeDocsUrl(type, decoration) {
+  const decorationSuffix = decoration ? `#${decoration}` : "";
+  return `${getBadgeDocsBaseUrl()}/${type}.md${decorationSuffix}`;
+}
+
 function createBadgeMarkdown(type, decoration) {
   const decorationSuffix = decoration ? `-${decoration.replace(/-/g, "_")}` : "";
   const badgeFilename = `${type}${decorationSuffix}.svg`;
   const badgeUrl = `${getBadgeBaseUrl()}/badges/${type}/${badgeFilename}`;
+  const badgeDocsUrl = getBadgeDocsUrl(type, decoration);
 
-  return `![${type}${decoration ? `(${decoration})` : ""}](${badgeUrl}) `;
+  return `[![${type}${decoration ? `(${decoration})` : ""}](${badgeUrl})](${badgeDocsUrl}) `;
 }
 
 // --- LocalStorage Helpers ---
