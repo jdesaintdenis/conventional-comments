@@ -1,5 +1,5 @@
 {
-  "name": "conventional-comments-helper",
+  "name": "conventional-comments-helper-driveco",
   "version": "0.2.6",
   "description": "Helps format code review comments on GitHub using the Conventional Comments standard.",
   "scripts": {
