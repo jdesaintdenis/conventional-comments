@@ -13,6 +13,19 @@ function attachListeners(root) {
       chrome.storage.local.set({ prettify: isEnabled });
     });
   }
+
+  const boldLabelsToggle = root.querySelector("#bold-labels");
+
+  if (boldLabelsToggle) {
+    chrome.storage.local.get(["boldLabels"], (result) => {
+      boldLabelsToggle.checked = result.boldLabels ?? true; // Default to true
+    });
+
+    boldLabelsToggle.addEventListener("change", () => {
+      const isEnabled = boldLabelsToggle.checked;
+      chrome.storage.local.set({ boldLabels: isEnabled });
+    });
+  }
 }
 
 // Exported initialization function for fallback modal

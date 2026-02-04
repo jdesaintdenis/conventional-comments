@@ -46,9 +46,9 @@ export const DECORATIONS = [
 // --- Selector for formatted Conventional Comments ---
 
 export const PLAIN_CC_REGEX =
-  /^\s*(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)\s*(?:\((non-blocking|blocking|if-minor)\))?:)\s*/;
+  /^\s*(?:\*\*)?(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\*\*)?(?:\s*\((non-blocking|blocking|if-minor)\))?:\s*/;
 export const BADGE_CC_REGEX =
-  /^\s*(?:\[(?=!\[))?!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\((?:https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/refs\/heads\/[^/]+\/assets|assets)\/badges\/[^/]+\/[^)]+\.svg\)(?:\]\([^)]+\))?\s*/;
+  /^\s*(?:\[(?=!\[))?!\[(?:(praise|nitpick|suggestion|issue|question|thought|chore|todo)(?:\((non-blocking|blocking|if-minor)\))?)\]\((?:(?:https?:\/\/raw\.githubusercontent\.com\/[^/]+\/[^/]+\/refs\/heads\/[^/]+\/assets)|(?:https?:\/\/github\.com\/[^/]+\/[^/]+\/raw\/[^/]+\/assets)|assets)\/badges\/[^/]+\/[^)]+\.svg\)(?:\]\([^)]+\))?\s*/;
 
 // --- Toolbar selector Constants ---
 
@@ -120,7 +120,7 @@ function getGithubRepoInfo() {
 function getBadgeBaseUrl() {
   const repoInfo = getGithubRepoInfo();
   if (repoInfo) {
-    return `https://raw.githubusercontent.com/${repoInfo.owner}/${repoInfo.repo}/refs/heads/${repoInfo.branch}/assets`;
+    return `https://github.com/${repoInfo.owner}/${repoInfo.repo}/raw/${repoInfo.branch}/assets`;
   }
 
   return "assets";
@@ -178,11 +178,9 @@ function updateCommentPrefix(toolbar, textarea) {
     newPrefix = createBadgeMarkdown(newType, newDecoration) + "\n";
     newValue = newPrefix + subject.trimStart();
   } else {
-    newPrefix = newType;
-    if (newDecoration) {
-      newPrefix += `(${newDecoration})`;
-    }
-    newPrefix += ": ";
+    const boldLabels = Platform.settings.get("boldLabels", true);
+    const decorationSuffix = newDecoration ? ` (${newDecoration})` : "";
+    newPrefix = `${boldLabels ? `**${newType}**` : newType}${decorationSuffix}: `;
     newValue = newPrefix + subject;
   }
 
