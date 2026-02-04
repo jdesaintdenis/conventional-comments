@@ -94,7 +94,7 @@ The extension can be built for both Chrome and Firefox using our build system:
       > [!NOTE]
       > Append ` -- prod` to a build command to generate a minified bundle.
 
-5. Load the extension:
+5. Load the extension _(you need to **enable developer mode** in your browser's extension page)_:
    - Chrome: Load the `build/chrome` directory as an unpacked extension
    - Firefox: Load the `build/firefox` directory as a temporary add-on
 

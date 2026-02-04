@@ -98,11 +98,6 @@ async function buildFirefox(buildMode) {
         background: {
             scripts: ['background.js'],
         },
-        browser_specific_settings: {
-            gecko: {
-                id: "conventional-comments-addon@pullpo.io"
-            }
-        }
     };
     
     fs.writeFileSync(

@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "name": "Conventional Comments (GitHub) - by Pullpo",
+  "name": "Conventional Comments (Security fork)",
   "version": "0.2.6",
   "description": "Helps format code review comments on GitHub using the Conventional Comments standard.",
   "homepage_url": "https://github.com/jdesaintdenis/conventional-comments",
