@@ -66,6 +66,11 @@ Contributions are welcome! Please feel free to submit a Pull Request. For major 
 
 ## 🛠️ Building from Source
 
+> [!NOTE]  
+> You will need [npm](https://www.npmjs.com) to install and build the project.
+>
+> The recommend way is to install [Node Version Manager](https://github.com/nvm-sh/nvm), which will install both npm and node locally.
+
 The extension can be built for both Chrome and Firefox using our build system:
 
 1. Fork this repository inside your own organization
@@ -76,7 +81,6 @@ The extension can be built for both Chrome and Firefox using our build system:
    cd conventional-comments
    npm install
    ```
-
 4. Build for your target browser:
    - For Chrome:
      ```bash
